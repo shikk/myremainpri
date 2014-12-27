@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="JAVA_MODULE" version="4">
+  <component name="FacetManager">
+    <facet type="android" name="Android">
+      <configuration />
+    </facet>
+  </component>
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/gen" isTestSource="false" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
+    </content>
+    <orderEntry type="jdk" jdkName="Android 4.4.2 Google APIs (x86 System Image)" jdkType="Android SDK" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="libs3" level="project" />
+    <orderEntry type="library" name="android-support-v411" level="project" />
+    <orderEntry type="library" name="XPrivacyCopy" level="project" />
+    <orderEntry type="library" name="android-support-v4" level="project" />
+    <orderEntry type="library" name="full_framework_151" level="project" />
+    <orderEntry type="library" name="libs5" level="project" />
+    <orderEntry type="library" name="android-support-v131" level="project" />
+    <orderEntry type="library" name="full_framework_15" level="project" />
+    <orderEntry type="library" name="libs1" level="project" />
+    <orderEntry type="library" name="libs4" level="project" />
+    <orderEntry type="library" name="XPrivacy3.5" level="project" />
+    <orderEntry type="library" name="android-support-v42" level="project" />
+    <orderEntry type="library" name="XposedBridgeApi-52" level="project" />
+    <orderEntry type="library" name="android-support-v48" level="project" />
+    <orderEntry type="library" name="XposedBridgeApi" level="project" />
+    <orderEntry type="library" name="android-support-v44" level="project" />
+    <orderEntry type="library" name="android-support-v41" level="project" />
+    <orderEntry type="library" name="libs" level="project" />
+    <orderEntry type="library" name="android-support-v43" level="project" />
+    <orderEntry type="library" name="android-support-v49" level="project" />
+    <orderEntry type="library" name="XPrivacy" level="project" />
+    <orderEntry type="library" name="XPrivacy1" level="project" />
+    <orderEntry type="library" name="android-support-v410" level="project" />
+    <orderEntry type="library" name="android-support-v47" level="project" />
+    <orderEntry type="library" name="android-support-v13" level="project" />
+    <orderEntry type="library" name="libs2" level="project" />
+    <orderEntry type="library" name="android-support-v45" level="project" />
+    <orderEntry type="library" name="android-support-v46" level="project" />
+    <orderEntry type="library" name="XPrivacy2" level="project" />
+    <orderEntry type="library" name="AndroidHiddenAPI" level="project" />
+    <orderEntry type="module" module-name="MyTestUmeng" />
+    <orderEntry type="module" module-name="XposedBridge" />
+    <orderEntry type="module" module-name="MyChangePhoneState" />
+    <orderEntry type="module" module-name="appcompat" />
+  </component>
+</module>
+
