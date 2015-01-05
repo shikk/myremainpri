@@ -10,11 +10,13 @@ import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
 import android.content.Context;
 import android.os.Build;
+import android.os.Build.VERSION;
 import android.os.Process;
 import android.util.Log;
 
@@ -33,7 +35,9 @@ public class XPrivacy implements IXposedHookLoadPackage, IXposedHookZygoteInit {
 	private static String mSecret = null;
 	private static List<String> mListHookError = new ArrayList<String>();
 	private static List<CRestriction> mListDisabled = new ArrayList<CRestriction>();
-
+	private static enum ExtraFiels{
+		CPU_ABI,CPU_ABI2,BRAND,BOARD,DEVICE,MODEL,DISPLAY,ID,MANUFACTURER,PRODUCT,SERIAL,TIME,RELEASE,SDK_INT,SDK
+	}
 	// http://developer.android.com/reference/android/Manifest.permission.html
 
 	static {
@@ -363,11 +367,70 @@ public class XPrivacy implements IXposedHookLoadPackage, IXposedHookZygoteInit {
 			try {
 				Field serial = Build.class.getField("SERIAL");
 				serial.setAccessible(true);
-				serial.set(null, PrivacyManager.getDefacedProp(Process.myUid(), "SERIAL"));
+//				serial.set(null, PrivacyManager.getDefacedProp(Process.myUid(), "SERIAL"));
+				serial.set(null, "shikkSerial");
 			} catch (Throwable ex) {
 				Util.bug(null, ex);
 			}
-
+		
+		for (ExtraFiels fiel : ExtraFiels.values()) {
+			Object value = null;
+			Class<?> cls = Build.class;
+			switch (fiel) {
+			case CPU_ABI:
+				value = "shikkabi";
+				break;
+			case CPU_ABI2:
+				value = "shikkabi2";
+				break;
+			case BOARD:
+				value = "shikkBorad";
+				break;
+			case BRAND:
+				value = "shikkBrand";
+				break;
+			case DEVICE:
+				value = "shikkDevice";
+				break;
+			case DISPLAY:
+				value = "shikkDisplay";
+				break;
+			case ID:
+				value = "shikkID";
+				break;
+			case MANUFACTURER:
+				value = "shikkMenufacture";
+				break;
+			case MODEL:
+				value = "shikkModel";
+				break;
+			case PRODUCT:
+				value = "shikkProduct";
+				break;	
+			case SERIAL:
+				value = "shikkSerial";
+				break;
+			case TIME:
+				value = 19890303l;
+				break;
+			case RELEASE:
+				cls = VERSION.class;
+				value = "5.5.5";
+				break;
+			case SDK:
+			case SDK_INT:
+				cls = VERSION.class;
+				value = 28;
+				break;
+			default:
+				break;
+			}
+			if (value != null) {
+				hookExtraField(cls,fiel.name(), value);
+			}
+		}
+		
+		
 		// Activity recognition
 		try {
 			Class.forName("com.google.android.gms.location.ActivityRecognitionClient", false, classLoader);
@@ -423,6 +486,16 @@ public class XPrivacy implements IXposedHookLoadPackage, IXposedHookZygoteInit {
 
 		// Providers
 		hookAll(XContentResolver.getPackageInstances(packageName, classLoader), classLoader, secret);
+	}
+
+	public static void hookExtraField(Class<?> cls,String field,Object value) {
+		try {
+			Field serial = cls.getField(field);
+			serial.setAccessible(true);
+			serial.set(null, value);
+		} catch (Throwable ex) {
+			Util.bug(null, ex);
+		}
 	}
 
 	public static void handleGetSystemService(String name, String className, String secret) {

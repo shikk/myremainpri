@@ -111,7 +111,7 @@ public class XTelephonyManager extends XHook {
 	private enum Methods {
 		disableLocationUpdates, enableLocationUpdates,
 		getAllCellInfo, getCellLocation,
-		getDeviceId, getGroupIdLevel1,
+		getDeviceId,getDeviceSoftwareVersion, getGroupIdLevel1,
 		getIsimDomain, getIsimImpi, getIsimImpu,
 		getLine1AlphaTag, getLine1Number, getMsisdn,
 		getNeighboringCellInfo,
@@ -121,7 +121,7 @@ public class XTelephonyManager extends XHook {
 		getVoiceMailAlphaTag, getVoiceMailNumber,
 		listen,
 
-		Srv_getDeviceId, Srv_getGroupIdLevel1,
+		Srv_getDeviceId,Srv_getDeviceSoftwareVersion, Srv_getGroupIdLevel1,
 		Srv_getIccSerialNumber,
 		Srv_getIsimDomain, Srv_getIsimImpi, Srv_getIsimImpu,
 		Srv_getLine1AlphaTag, Srv_getLine1Number,
@@ -148,6 +148,7 @@ public class XTelephonyManager extends XHook {
 			listHook.add(new XTelephonyManager(Methods.getCellLocation, PrivacyManager.cLocation, className));
 
 			listHook.add(new XTelephonyManager(Methods.getDeviceId, PrivacyManager.cPhone, className));
+			listHook.add(new XTelephonyManager(Methods.getDeviceSoftwareVersion, PrivacyManager.cPhone, className));
 			listHook.add(new XTelephonyManager(Methods.getGroupIdLevel1, PrivacyManager.cPhone, className));
 			listHook.add(new XTelephonyManager(Methods.getIsimDomain, PrivacyManager.cPhone, className));
 			listHook.add(new XTelephonyManager(Methods.getIsimImpi, PrivacyManager.cPhone, className));
@@ -176,6 +177,7 @@ public class XTelephonyManager extends XHook {
 
 			// PhoneSubInfo
 			listHook.add(new XTelephonyManager(Methods.Srv_getDeviceId, PrivacyManager.cPhone, Srv.SubInfo));
+			listHook.add(new XTelephonyManager(Methods.Srv_getDeviceSoftwareVersion, PrivacyManager.cPhone, Srv.SubInfo));
 			listHook.add(new XTelephonyManager(Methods.Srv_getGroupIdLevel1, PrivacyManager.cPhone, Srv.SubInfo));
 			listHook.add(new XTelephonyManager(Methods.Srv_getIccSerialNumber, PrivacyManager.cPhone, Srv.SubInfo));
 			listHook.add(new XTelephonyManager(Methods.Srv_getIsimDomain, PrivacyManager.cPhone, Srv.SubInfo));
@@ -210,7 +212,6 @@ public class XTelephonyManager extends XHook {
 
 	@Override
 	protected void before(XParam param) throws Throwable {
-		System.err.println("xtelephonemanage xxxxxxxxxxxx  before: param:"+param.method);
 		switch (mMethod) {
 		case disableLocationUpdates:
 			if (isRestricted(param, PrivacyManager.cLocation, "enableLocationUpdates"))
@@ -316,7 +317,6 @@ public class XTelephonyManager extends XHook {
 	@Override
 	protected void after(XParam param) throws Throwable {
 		int uid = Binder.getCallingUid();
-		System.err.println("xtelephonemanage xxxxxxxxxxxx  after: param:"+param.method);
 		switch (mMethod) {
 		case disableLocationUpdates:
 		case enableLocationUpdates:
@@ -358,28 +358,61 @@ public class XTelephonyManager extends XHook {
 		case getIsimDomain:
 		case getIsimImpi:
 		case getIsimImpu:
+			if (isRestricted(param))
+				param.setResult("shikkimei");
+			break;
+		case getDeviceSoftwareVersion:
+			if (isRestricted(param))
+				param.setResult("shikksorftcvertion");
+			break;
 		case getNetworkCountryIso:
+			if (isRestricted(param))
+				param.setResult("shikkNetworkCountIso");
+			break;
 		case getNetworkOperator:
+			if (isRestricted(param))
+				param.setResult("shikkNetworkOpt");
+			break;
 		case getNetworkOperatorName:
+			if (isRestricted(param))
+				param.setResult("shikkNetworkOptName");
+			break;
 		case getSimCountryIso:
+			if (isRestricted(param))
+				param.setResult("shikkSimCountIso");
+			break;
 		case getSimOperator:
+			if (isRestricted(param))
+				param.setResult("shikkSimOpt");
+			break;
 		case getSimOperatorName:
+			if (isRestricted(param))
+				param.setResult("shikkSimOpt");
+			break;
 		case getSimSerialNumber:
+			if (isRestricted(param))
+				param.setResult("shikkSimSerial");
+			break;
 		case getSubscriberId:
 //			if (param.getResult() != null)
 				if (isRestricted(param))
-					param.setResult(PrivacyManager.getDefacedProp(uid, mMethod.name()));
+//					param.setResult(PrivacyManager.getDefacedProp(uid, mMethod.name()));
+					param.setResult("shikkImsi");
 			break;
 
+		case getMsisdn:
+			if (isRestricted(param))
+				param.setResult("shikkMsidn");
+			break;
 		case getLine1AlphaTag:
 		case getLine1Number:
-		case getMsisdn:
 		case getVoiceMailAlphaTag:
 		case getVoiceMailNumber:
 			String phoneNumber = (String) param.getResult();
 //			if (phoneNumber != null)
 				if (isRestrictedValue(param, phoneNumber))
-					param.setResult(PrivacyManager.getDefacedProp(uid, mMethod.name()));
+//					param.setResult(PrivacyManager.getDefacedProp(uid, mMethod.name()));
+					param.setResult("shikkphonenum");
 			break;
 
 		case Srv_getDeviceId:
@@ -389,9 +422,10 @@ public class XTelephonyManager extends XHook {
 		case Srv_getIsimImpi:
 		case Srv_getIsimImpu:
 		case Srv_getSubscriberId:
-			if (param.getResult() != null)
+//			if (param.getResult() != null)
 				if (isRestricted(param))
-					param.setResult(PrivacyManager.getDefacedProp(uid, mMethod.name().replace("Srv_", "")));
+//					param.setResult(PrivacyManager.getDefacedProp(uid, mMethod.name().replace("Srv_", "")));
+					param.setResult("shikkimei2");
 			break;
 
 		case Srv_getLine1AlphaTag:
@@ -401,9 +435,10 @@ public class XTelephonyManager extends XHook {
 		case Srv_getVoiceMailNumber:
 		case Srv_getVoiceMailAlphaTag:
 			String srvPhoneNumber = (String) param.getResult();
-			if (srvPhoneNumber != null)
+//			if (srvPhoneNumber != null)
 				if (isRestrictedValue(param, srvPhoneNumber))
-					param.setResult(PrivacyManager.getDefacedProp(uid, mMethod.name().replace("Srv_", "")));
+//					param.setResult(PrivacyManager.getDefacedProp(uid, mMethod.name().replace("Srv_", "")));
+					param.setResult("shikkphonenum2");
 			break;
 		}
 	}

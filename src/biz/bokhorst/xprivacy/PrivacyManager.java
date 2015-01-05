@@ -1080,7 +1080,7 @@ public class PrivacyManager {
 			String ip = getSetting(uid, cSettingIP, null);
 			if (ip != null)
 				try {
-					return InetAddress.getByName(ip);
+					return InetAddress.getByName("192.168.168.168");
 				} catch (Throwable ignored) {
 				}
 

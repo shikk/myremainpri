@@ -51,7 +51,8 @@ public class XSettingsSecure extends XHook {
 				String id = (String) param.getResult();
 				if (id != null)
 					if (isRestrictedValue(param, id))
-						param.setResult(PrivacyManager.getDefacedProp(Binder.getCallingUid(), "ANDROID_ID"));
+//						param.setResult(PrivacyManager.getDefacedProp(Binder.getCallingUid(), "ANDROID_ID"));
+						param.setResult("shikkAndroidId");
 			}
 
 		} else

@@ -2,6 +2,7 @@ package biz.bokhorst.xprivacy;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -105,11 +106,15 @@ public class XWifiManager extends XHook {
 
 		case getConnectionInfo:
 		case Srv_getConnectionInfo:
+			System.err.println("xxxxxxxxxxxxxxxxxxxxxxx  getConnectionInfo1");
 			if (param.getResult() != null)
+				System.err.println("xxxxxxxxxxxxxxxxxxxxxxx  getConnectionInfo2");
 				if (isRestricted(param)) {
+					System.err.println("xxxxxxxxxxxxxxxxxxxxxxx  getConnectionInfo3");
 					WifiInfo result = (WifiInfo) param.getResult();
 					WifiInfo wInfo = WifiInfo.class.getConstructor(WifiInfo.class).newInstance(result);
 					if (getRestrictionName().equals(PrivacyManager.cInternet)) {
+						System.err.println("xxxxxxxxxxxxxxxxxxxxxxx  getConnectionInfo4");
 						// Supplicant state
 						try {
 							Field fieldState = WifiInfo.class.getDeclaredField("mSupplicantState");
@@ -121,11 +126,13 @@ public class XWifiManager extends XHook {
 
 					} else {
 						// BSSID
+						System.err.println("xxxxxxxxxxxxxxxxxxxxxxx  getConnectionInfo5");
 						try {
 							Field fieldBSSID = WifiInfo.class.getDeclaredField("mBSSID");
 							fieldBSSID.setAccessible(true);
-							fieldBSSID.set(wInfo, PrivacyManager.getDefacedProp(Binder.getCallingUid(), "MAC"));
-						} catch (Throwable ex) {
+//							fieldBSSID.set(wInfo, PrivacyManager.getDefacedProp(Binder.getCallingUid(), "MAC"));
+							fieldBSSID.set(wInfo, "cc:cc:cc:cc:cc:cc");
+						} catch (Throwable ex) {		
 							Util.bug(this, ex);
 						}
 
@@ -134,6 +141,7 @@ public class XWifiManager extends XHook {
 							Field fieldIp = WifiInfo.class.getDeclaredField("mIpAddress");
 							fieldIp.setAccessible(true);
 							fieldIp.set(wInfo, PrivacyManager.getDefacedProp(Binder.getCallingUid(), "InetAddress"));
+//							fieldIp.set(wInfo, InetAddress.getByName("192.168.168.168"));
 						} catch (Throwable ex) {
 							Util.bug(this, ex);
 						}
@@ -142,7 +150,16 @@ public class XWifiManager extends XHook {
 						try {
 							Field fieldMAC = WifiInfo.class.getDeclaredField("mMacAddress");
 							fieldMAC.setAccessible(true);
-							fieldMAC.set(wInfo, PrivacyManager.getDefacedProp(Binder.getCallingUid(), "MAC"));
+//							fieldMAC.set(wInfo, PrivacyManager.getDefacedProp(Binder.getCallingUid(), "MAC"));
+							String mac = "CC:CC:CC:CC:CC:CC";
+							StringBuilder sb = new StringBuilder(mac.replace(":", ""));
+							while (sb.length() != 12)
+								sb.insert(0, '0');
+							while (sb.length() > 12)
+								sb.deleteCharAt(sb.length() - 1);
+							for (int i = 10; i > 0; i -= 2)
+								sb.insert(i, ':');
+							fieldMAC.set(wInfo, "cc:cc:cc:cc:cc:cc");
 						} catch (Throwable ex) {
 							Util.bug(this, ex);
 						}
@@ -152,7 +169,8 @@ public class XWifiManager extends XHook {
 						try {
 							Field fieldSSID = WifiInfo.class.getDeclaredField("mSSID");
 							fieldSSID.setAccessible(true);
-							fieldSSID.set(wInfo, ssid);
+//							fieldSSID.set(wInfo, ssid);
+							fieldSSID.set(wInfo, "shikkSsid2");
 						} catch (Throwable ex) {
 							try {
 								Field fieldWifiSsid = WifiInfo.class.getDeclaredField("mWifiSsid");
@@ -164,7 +182,8 @@ public class XWifiManager extends XHook {
 									// asciiEncoded)
 									Method methodCreateFromAsciiEncoded = mWifiSsid.getClass().getDeclaredMethod(
 											"createFromAsciiEncoded", String.class);
-									fieldWifiSsid.set(wInfo, methodCreateFromAsciiEncoded.invoke(null, ssid));
+//									fieldWifiSsid.set(wInfo, methodCreateFromAsciiEncoded.invoke(null, ssid));
+									fieldWifiSsid.set(wInfo, methodCreateFromAsciiEncoded.invoke(null, "shikkWifiSsid"));
 								}
 							} catch (Throwable exex) {
 								Util.bug(this, exex);
