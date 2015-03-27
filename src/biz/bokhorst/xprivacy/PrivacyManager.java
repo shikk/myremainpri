@@ -1181,6 +1181,7 @@ public class PrivacyManager {
 
 		// 1 degree ~ 111111 m
 		// 1 m ~ 0,000009 degrees
+		// shikklocation
 		if (location == null)
 			location = new Location(cDeface);
 		location.setLatitude(Float.parseFloat(sLat) + (Math.random() * 2.0 - 1.0) * location.getAccuracy() * 9e-6);

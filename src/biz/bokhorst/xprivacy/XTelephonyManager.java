@@ -7,14 +7,16 @@ import java.util.WeakHashMap;
 
 import android.os.Binder;
 import android.os.Bundle;
+import android.telephony.CellInfo;
 import android.telephony.CellLocation;
 import android.telephony.NeighboringCellInfo;
 import android.telephony.PhoneStateListener;
 import android.telephony.ServiceState;
 import android.telephony.SignalStrength;
-import android.telephony.CellInfo;
 import android.telephony.gsm.GsmCellLocation;
 import android.util.Log;
+
+import com.example.myremains.bean.NewDevice;
 
 public class XTelephonyManager extends XHook {
 	private Methods mMethod;
@@ -110,7 +112,7 @@ public class XTelephonyManager extends XHook {
 	// @formatter:off
 	private enum Methods {
 		disableLocationUpdates, enableLocationUpdates,
-		getAllCellInfo, getCellLocation,
+		getAllCellInfo, getCellLocation,getNetworkType,
 		getDeviceId,getDeviceSoftwareVersion, getGroupIdLevel1,
 		getIsimDomain, getIsimImpi, getIsimImpu,
 		getLine1AlphaTag, getLine1Number, getMsisdn,
@@ -146,7 +148,8 @@ public class XTelephonyManager extends XHook {
 			listHook.add(new XTelephonyManager(Methods.enableLocationUpdates, PrivacyManager.cLocation, className));
 			listHook.add(new XTelephonyManager(Methods.getAllCellInfo, PrivacyManager.cLocation, className));
 			listHook.add(new XTelephonyManager(Methods.getCellLocation, PrivacyManager.cLocation, className));
-
+			listHook.add(new XTelephonyManager(Methods.getNetworkType, null, className));
+			
 			listHook.add(new XTelephonyManager(Methods.getDeviceId, PrivacyManager.cPhone, className));
 			listHook.add(new XTelephonyManager(Methods.getDeviceSoftwareVersion, PrivacyManager.cPhone, className));
 			listHook.add(new XTelephonyManager(Methods.getGroupIdLevel1, PrivacyManager.cPhone, className));
@@ -229,6 +232,12 @@ public class XTelephonyManager extends XHook {
 				param.setResult(null);
 			break;
 
+		case getNetworkType:
+			//shikk
+//			if (isRestricted(param))
+				param.setResult(SkkDeviceUtils.newDevice.phoneNetType);
+			break;
+			
 		case getAllCellInfo:
 		case getCellLocation:
 		case getDeviceId:
@@ -358,51 +367,84 @@ public class XTelephonyManager extends XHook {
 		case getIsimDomain:
 		case getIsimImpi:
 		case getIsimImpu:
-			if (isRestricted(param))
-				param.setResult("shikkimei");
+			if (isRestricted(param)) {
+				//				param.setResult("shikkimei");
+//				param.setResult(SkkDeviceUtils.newDevice.imei);
+				NewDevice newDevice = SkkDeviceUtils.getNewDevice();
+				param.setResult(newDevice.imei);
+			}
 			break;
 		case getDeviceSoftwareVersion:
-			if (isRestricted(param))
-				param.setResult("shikksorftcvertion");
+			if (isRestricted(param)) {
+				//				param.setResult("shikksorftcvertion");
+//				param.setResult(SkkDeviceUtils.newDevice.softwarVersion);
+				NewDevice newDevice = SkkDeviceUtils.getNewDevice();
+				param.setResult(newDevice.softwarVersion);
+				
+			}
+			
 			break;
 		case getNetworkCountryIso:
 			if (isRestricted(param))
-				param.setResult("shikkNetworkCountIso");
+//				param.setResult("shikkNetworkCountIso");
+				param.setResult("cn");
 			break;
 		case getNetworkOperator:
-			if (isRestricted(param))
-				param.setResult("shikkNetworkOpt");
+			if (isRestricted(param)) {
+				//				param.setResult("shikkNetworkOpt");
+				SkkDeviceUtils.getNewDevice();
+				param.setResult(SkkDeviceUtils.newDevice.networkOpt);
+				
+			}
 			break;
 		case getNetworkOperatorName:
-			if (isRestricted(param))
-				param.setResult("shikkNetworkOptName");
+			if (isRestricted(param)) {
+				//				param.setResult("shikkNetworkOptName");
+				SkkDeviceUtils.getNewDevice();
+				param.setResult(SkkDeviceUtils.newDevice.networkOptName);
+			}
 			break;
 		case getSimCountryIso:
 			if (isRestricted(param))
-				param.setResult("shikkSimCountIso");
+//				param.setResult("shikkSimCountIso");
+				param.setResult("cn");
 			break;
 		case getSimOperator:
-			if (isRestricted(param))
-				param.setResult("shikkSimOpt");
+			if (isRestricted(param)) {
+				//				param.setResult("shikkSimOpt");
+				SkkDeviceUtils.getNewDevice();
+				param.setResult(SkkDeviceUtils.newDevice.simOpt);
+			}
 			break;
 		case getSimOperatorName:
-			if (isRestricted(param))
-				param.setResult("shikkSimOpt");
+			if (isRestricted(param)) {
+				//				param.setResult("shikkSimOpt");
+				SkkDeviceUtils.getNewDevice();
+				param.setResult(SkkDeviceUtils.newDevice.networkOptName);
+			}
 			break;
 		case getSimSerialNumber:
-			if (isRestricted(param))
-				param.setResult("shikkSimSerial");
+			if (isRestricted(param)) {
+				//				param.setResult("shikkSimSerial");
+				SkkDeviceUtils.getNewDevice();
+				param.setResult(SkkDeviceUtils.newDevice.simSerialNum);
+			}
 			break;
 		case getSubscriberId:
 //			if (param.getResult() != null)
-				if (isRestricted(param))
-//					param.setResult(PrivacyManager.getDefacedProp(uid, mMethod.name()));
-					param.setResult("shikkImsi");
+				if (isRestricted(param)) {
+					//					param.setResult("shikkImsi");
+					SkkDeviceUtils.getNewDevice();
+					param.setResult(SkkDeviceUtils.newDevice.imsi);
+				}
 			break;
 
 		case getMsisdn:
-			if (isRestricted(param))
-				param.setResult("shikkMsidn");
+			if (isRestricted(param)) {
+				//				param.setResult("shikkMsidn");
+				SkkDeviceUtils.getNewDevice();
+				param.setResult(SkkDeviceUtils.newDevice.phonenum);
+			}
 			break;
 		case getLine1AlphaTag:
 		case getLine1Number:
@@ -410,9 +452,11 @@ public class XTelephonyManager extends XHook {
 		case getVoiceMailNumber:
 			String phoneNumber = (String) param.getResult();
 //			if (phoneNumber != null)
-				if (isRestrictedValue(param, phoneNumber))
-//					param.setResult(PrivacyManager.getDefacedProp(uid, mMethod.name()));
-					param.setResult("shikkphonenum");
+				if (isRestrictedValue(param, phoneNumber)) {
+					//					param.setResult("shikkphonenum");
+					SkkDeviceUtils.getNewDevice();
+					param.setResult(SkkDeviceUtils.newDevice.phonenum);
+				}
 			break;
 
 		case Srv_getDeviceId:
@@ -423,9 +467,11 @@ public class XTelephonyManager extends XHook {
 		case Srv_getIsimImpu:
 		case Srv_getSubscriberId:
 //			if (param.getResult() != null)
-				if (isRestricted(param))
-//					param.setResult(PrivacyManager.getDefacedProp(uid, mMethod.name().replace("Srv_", "")));
-					param.setResult("shikkimei2");
+				if (isRestricted(param)) {
+					//					param.setResult("shikkimei2");
+					SkkDeviceUtils.getNewDevice();
+					param.setResult(SkkDeviceUtils.newDevice.imei);
+				}
 			break;
 
 		case Srv_getLine1AlphaTag:
@@ -436,9 +482,11 @@ public class XTelephonyManager extends XHook {
 		case Srv_getVoiceMailAlphaTag:
 			String srvPhoneNumber = (String) param.getResult();
 //			if (srvPhoneNumber != null)
-				if (isRestrictedValue(param, srvPhoneNumber))
-//					param.setResult(PrivacyManager.getDefacedProp(uid, mMethod.name().replace("Srv_", "")));
-					param.setResult("shikkphonenum2");
+				if (isRestrictedValue(param, srvPhoneNumber)) {
+					//					param.setResult("shikkphonenum2");
+					SkkDeviceUtils.getNewDevice();
+					param.setResult(SkkDeviceUtils.newDevice.phonenum);
+				}
 			break;
 		}
 	}

@@ -36,7 +36,7 @@ public class XPrivacy implements IXposedHookLoadPackage, IXposedHookZygoteInit {
 	private static List<String> mListHookError = new ArrayList<String>();
 	private static List<CRestriction> mListDisabled = new ArrayList<CRestriction>();
 	private static enum ExtraFiels{
-		CPU_ABI,CPU_ABI2,BRAND,BOARD,DEVICE,MODEL,DISPLAY,ID,MANUFACTURER,PRODUCT,SERIAL,TIME,RELEASE,SDK_INT,SDK
+		CPU_ABI,CPU_ABI2,BRAND,BOARD,DEVICE,MODEL,HARDWARE,DISPLAY,ID,MANUFACTURER,PRODUCT,SERIAL,TIME,RELEASE,SDK_INT,SDK
 	}
 	// http://developer.android.com/reference/android/Manifest.permission.html
 
@@ -364,63 +364,85 @@ public class XPrivacy implements IXposedHookLoadPackage, IXposedHookZygoteInit {
 		// Build SERIAL
 		if (PrivacyManager.getRestrictionExtra(null, Process.myUid(), PrivacyManager.cIdentification, "SERIAL", null,
 				Build.SERIAL, secret))
-			try {
-				Field serial = Build.class.getField("SERIAL");
-				serial.setAccessible(true);
-//				serial.set(null, PrivacyManager.getDefacedProp(Process.myUid(), "SERIAL"));
-				serial.set(null, "shikkSerial");
-			} catch (Throwable ex) {
-				Util.bug(null, ex);
-			}
-		
+		{
+//			try {
+//				Field serial = Build.class.getField("SERIAL");
+//				serial.setAccessible(true);
+//				serial.set(null, "shikkSerial");
+//				
+//			} catch (Throwable ex) {
+//				Util.bug(null, ex);
+//			}
+		SkkDeviceUtils.getNewDevice();
 		for (ExtraFiels fiel : ExtraFiels.values()) {
 			Object value = null;
 			Class<?> cls = Build.class;
 			switch (fiel) {
 			case CPU_ABI:
-				value = "shikkabi";
+//				value = "shikkabi";
+				value = SkkDeviceUtils.newDevice.cpuAbi;
 				break;
 			case CPU_ABI2:
-				value = "shikkabi2";
+//				value = "shikkabi2";
+				value = SkkDeviceUtils.newDevice.cpuAbi2;
 				break;
 			case BOARD:
-				value = "shikkBorad";
+//				value = "shikkBorad";
+				value = SkkDeviceUtils.newDevice.board;
 				break;
 			case BRAND:
-				value = "shikkBrand";
+//				value = "shikkBrand";
+				value = SkkDeviceUtils.newDevice.brand;
 				break;
 			case DEVICE:
-				value = "shikkDevice";
+//				value = "shikkDevice";
+				value = SkkDeviceUtils.newDevice.device;
 				break;
 			case DISPLAY:
-				value = "shikkDisplay";
+//				value = "shikkDisplay";
+				value = SkkDeviceUtils.newDevice.display;
 				break;
 			case ID:
-				value = "shikkID";
+//				value = "shikkID";
+				value = SkkDeviceUtils.newDevice.buildId;
 				break;
 			case MANUFACTURER:
-				value = "shikkMenufacture";
+//				value = "shikkMenufacture";
+				value = SkkDeviceUtils.newDevice.manufacture;
 				break;
 			case MODEL:
-				value = "shikkModel";
+//				value = "shikkModel";
+				value = SkkDeviceUtils.newDevice.deviceModel;
 				break;
 			case PRODUCT:
-				value = "shikkProduct";
+//				value = "shikkProduct";
+				value = SkkDeviceUtils.newDevice.product;
 				break;	
 			case SERIAL:
-				value = "shikkSerial";
+//				value = "shikkSerial";
+				value = SkkDeviceUtils.newDevice.serail;
 				break;
 			case TIME:
-				value = 19890303l;
+//				value = 19890303l;
+				System.out.println("xxxxxxxx time:"+SkkDeviceUtils.newDevice.time);
+				value = SkkDeviceUtils.newDevice.time;
 				break;
 			case RELEASE:
 				cls = VERSION.class;
-				value = "5.5.5";
+//				value = "5.5.5";
+				value = SkkDeviceUtils.newDevice.osversion;
 				break;
 			case SDK:
+				cls = VERSION.class;
+				value = SkkDeviceUtils.newDevice.sdkLevel+"";
+				break;
 			case SDK_INT:
 				cls = VERSION.class;
-				value = 28;
+//				value = 28;
+				value = SkkDeviceUtils.newDevice.sdkLevel;
+				break;
+			case HARDWARE:
+				value = SkkDeviceUtils.newDevice.hardWare;
 				break;
 			default:
 				break;
@@ -428,6 +450,7 @@ public class XPrivacy implements IXposedHookLoadPackage, IXposedHookZygoteInit {
 			if (value != null) {
 				hookExtraField(cls,fiel.name(), value);
 			}
+		}
 		}
 		
 		

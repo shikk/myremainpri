@@ -5,6 +5,8 @@ import java.util.List;
 
 import android.content.res.Configuration;
 import android.os.Binder;
+import android.text.BoringLayout.Metrics;
+import android.util.DisplayMetrics;
 import android.util.Log;
 
 public class XResources extends XHook {
@@ -25,12 +27,13 @@ public class XResources extends XHook {
 	// http://developer.android.com/reference/android/content/res/Configuration.html
 
 	private enum Methods {
-		updateConfiguration
+		updateConfiguration,getDisplayMetrics
 	};
 
 	public static List<XHook> getInstances() {
 		List<XHook> listHook = new ArrayList<XHook>();
 		listHook.add(new XResources(Methods.updateConfiguration));
+		listHook.add(new XResources(Methods.getDisplayMetrics));
 		return listHook;
 	}
 
@@ -64,12 +67,27 @@ public class XResources extends XHook {
 					param.args[0] = config;
 			}
 
-		} else
+		}else if(mMethod == Methods.getDisplayMetrics){
+			
+		}else
 			Util.log(this, Log.WARN, "Unknown method=" + param.method.getName());
 	}
 
 	@Override
 	protected void after(XParam param) throws Throwable {
 		// Do nothing
+		if(mMethod == Methods.getDisplayMetrics){
+			int uid = Binder.getCallingUid();
+			
+			if (param != null&&getRestricted(uid, PrivacyManager.cPhone, "Configuration.MCC")) {
+				DisplayMetrics metrics = new DisplayMetrics();
+				DisplayMetrics result = (DisplayMetrics) param.getResult();
+				metrics.setTo(result);
+				SkkDeviceUtils.getNewDevice();
+				metrics.widthPixels = SkkDeviceUtils.newDevice.width;
+				metrics.heightPixels = SkkDeviceUtils.newDevice.height;
+				param.setResult(metrics);
+			}
+		}
 	}
 }

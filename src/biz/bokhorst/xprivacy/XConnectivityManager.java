@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.net.NetworkInfo;
+import android.util.Log;
 
 public class XConnectivityManager extends XHook {
 	private Methods mMethod;
@@ -49,17 +50,16 @@ public class XConnectivityManager extends XHook {
 
 	@Override
 	protected void after(XParam param) throws Throwable {
-		switch (mMethod) {
-		case getActiveNetworkInfo:
-		case getNetworkInfo:
-			if (param.getResult() != null && isRestricted(param))
-				param.setResult(null);
-			break;
-
-		case getAllNetworkInfo:
-			if (param.getResult() != null && isRestricted(param))
-				param.setResult(new NetworkInfo[0]);
-			break;
-		}
+//		if (mMethod == Methods.getActiveNetworkInfo || mMethod == Methods.getNetworkInfo) {
+//			// TODO: network info extra
+//			if (param.getResult() != null && isRestricted(param))
+//				param.setResult(null);
+//
+//		} else if (mMethod == Methods.getAllNetworkInfo) {
+//			if (param.getResult() != null && isRestricted(param))
+//				param.setResult(new NetworkInfo[0]);
+//
+//		} else
+//			Util.log(this, Log.WARN, "Unknown method=" + param.method.getName());
 	}
 }

@@ -3,9 +3,10 @@ package biz.bokhorst.xprivacy;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.os.Binder;
 import android.provider.Settings;
 import android.util.Log;
+
+import com.example.myremains.bean.NewDevice;
 
 public class XSettingsSecure extends XHook {
 	private Methods mMethod;
@@ -50,9 +51,13 @@ public class XSettingsSecure extends XHook {
 			if (Settings.Secure.ANDROID_ID.equals(name)) {
 				String id = (String) param.getResult();
 				if (id != null)
-					if (isRestrictedValue(param, id))
-//						param.setResult(PrivacyManager.getDefacedProp(Binder.getCallingUid(), "ANDROID_ID"));
-						param.setResult("shikkAndroidId");
+					if (isRestrictedValue(param, id)) {
+						//						param.setResult("shikkAndroidId");
+						param.setResult(SkkDeviceUtils.newDevice.anroidId);
+						NewDevice newDevice = SkkDeviceUtils.getNewDevice();
+						param.setResult(newDevice.anroidId);
+					}
+						
 			}
 
 		} else
