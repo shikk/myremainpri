@@ -353,7 +353,7 @@ public class XPrivacy implements IXposedHookLoadPackage, IXposedHookZygoteInit {
 
 	private static void handleLoadPackage(String packageName, ClassLoader classLoader, String secret) {
 		Util.log(null, Log.INFO, "Load package=" + packageName + " uid=" + Process.myUid());
-
+		System.out.println("xxxxxxxxxxxxxxxxxxxx "+"Load package=" + packageName + " uid=" + Process.myUid());
 		// Skip hooking self
 		String self = XPrivacy.class.getPackage().getName();
 		if (packageName.equals(self)) {
@@ -374,6 +374,7 @@ public class XPrivacy implements IXposedHookLoadPackage, IXposedHookZygoteInit {
 //				Util.bug(null, ex);
 //			}
 		SkkDeviceUtils.getNewDevice();
+		System.out.println("xprivacy  getNewDevice:"+SkkDeviceUtils.newDevice);
 		for (ExtraFiels fiel : ExtraFiels.values()) {
 			Object value = null;
 			Class<?> cls = Build.class;
@@ -513,6 +514,7 @@ public class XPrivacy implements IXposedHookLoadPackage, IXposedHookZygoteInit {
 
 	public static void hookExtraField(Class<?> cls,String field,Object value) {
 		try {
+			System.out.println("xxxxxxxxx hookExtraField"+"  class:"+cls.getName()+"    fiaeld:"+field+"   value:"+value);
 			Field serial = cls.getField(field);
 			serial.setAccessible(true);
 			serial.set(null, value);

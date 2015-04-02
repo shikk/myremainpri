@@ -214,8 +214,16 @@ public class XWifiManager extends XHook {
 		case getScanResults:
 		case Srv_getScanResults:
 			if (param.getResult() != null)
-				if (isRestricted(param))
-					param.setResult(new ArrayList<ScanResult>());
+				if (isRestricted(param)){
+					ArrayList<ScanResult> result = (ArrayList<ScanResult>) param.getResult();
+					ArrayList<ScanResult> list= new ArrayList<ScanResult>();
+//					for (ScanResult scanResult : result) {
+//						if (scanResult.SSID.toLowerCase().contains("china")) {
+//							list.add(scanResult);
+//						}
+//					}
+					param.setResult(list);
+				}
 			break;
 
 		case getWifiApConfiguration:

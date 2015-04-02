@@ -11,23 +11,25 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Environment;
 
 import com.example.myremains.bean.NewDevice;
 
 
 public class SkkDeviceUtils{
 
-	public static NewDevice newDevice = new NewDevice();
+	public static final NewDevice newDevice = new NewDevice();
 	public static NewDevice getNewDevice(){
 //		if (newDevice == null) {
-			String filePath = "/mnt/sdcard/SkkConfig/newdevice.txt";
+			String filePath = "/storage/sdcard1/SkkConfig/newdevice.txt";
 			File file = new File(filePath);
-			
-			
+			if (file !=null && file.exists() && file.canRead() ) {
 			ObjectInputStream stream = null;
 			try {
 				stream = new ObjectInputStream(new FileInputStream(file));
-				newDevice = (NewDevice) stream.readObject();
+				NewDevice tmpDevice = (NewDevice) stream.readObject();
+				System.out.println("getNewDevice tmpDevice:"+tmpDevice);
+				newDevice.set(tmpDevice);
 			} catch (StreamCorruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -49,6 +51,7 @@ public class SkkDeviceUtils{
 						e.printStackTrace();
 					}
 				}
+			}
 			}
 			
 			
@@ -161,11 +164,9 @@ public class SkkDeviceUtils{
 				newDevice.phoneNetType = query.getInt(query.getColumnIndex("phone_net_type"));
 				newDevice.sdkLevel = query.getInt(query.getColumnIndex("sdk_level"));
 				newDevice.width = query.getInt(query.getColumnIndex("width"));
-			}else{
-				newDevice = null;
 			}
 		}
-//		System.out.println("xxxxxxx:"+newDevice);
+		System.out.println("xxxxxxx:"+newDevice);
 	}
 
 	 

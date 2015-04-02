@@ -1,11 +1,11 @@
 package biz.bokhorst.xprivacy;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import android.os.Environment;
 import android.util.Log;
-
 import biz.bokhorst.xprivacy.XHook;
 
 public class XEnvironment extends XHook {
@@ -25,12 +25,14 @@ public class XEnvironment extends XHook {
 	// http://developer.android.com/reference/android/os/Environment.html
 
 	private enum Methods {
-		getExternalStorageState
+		getExternalStorageState,getExternalStorageDirectory,getExternalStoragePublicDirectory
 	};
 
 	public static List<XHook> getInstances() {
 		List<XHook> listHook = new ArrayList<XHook>();
 		listHook.add(new XEnvironment(Methods.getExternalStorageState, PrivacyManager.cStorage));
+		listHook.add(new XEnvironment(Methods.getExternalStorageDirectory, PrivacyManager.cStorage));
+		listHook.add(new XEnvironment(Methods.getExternalStoragePublicDirectory, PrivacyManager.cStorage));
 		return listHook;
 	}
 
@@ -43,9 +45,12 @@ public class XEnvironment extends XHook {
 	protected void after(XParam param) throws Throwable {
 		if (mMethod == Methods.getExternalStorageState) {
 			if (param.getResult() != null && isRestricted(param))
-				param.setResult(Environment.MEDIA_UNMOUNTED);
+				param.setResult(Environment.MEDIA_MOUNTED);
 
-		} else
+		} else if (mMethod == Methods.getExternalStorageDirectory || mMethod == Methods.getExternalStoragePublicDirectory) {
+//			File result = (File) param.getResult();
+//			param.setResult(new File(result.getAbsolutePath().replaceAll("sdcard0", "sdcard1")));
+		}
 			Util.log(this, Log.WARN, "Unknown method=" + param.method.getName());
 	}
 }
