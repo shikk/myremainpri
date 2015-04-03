@@ -3,10 +3,14 @@ package biz.bokhorst.xprivacy;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 import android.os.Binder;
 import android.util.Log;
+import android.R.bool;
 import android.content.ComponentName;
 import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
@@ -19,7 +23,11 @@ public class XPackageManager extends XHook {
 	private Methods mMethod;
 	private String mClassName;
 	private static final String cClassName = "android.app.ApplicationPackageManager";
-
+	private static final String[] assetAppfilePkgName = {"com.shikk.changeip","de.robv.android.xposed.installer","biz.bokhorst.xprivacy","com.speedsoftware.rootexplorer","com.pyler.xinternalsd"};
+	private static final String[] randomPkgnames = {"com.cmbchina.ccd.pluto.cmbActivity","cmb.pb","com.tecent.mobileqq","com.coomix.app.bus","com.qzone","com.sankuai.movie","com.ylmf.ancroid.client",
+													"com.antutu.tester","com.gua.go.lucncer","com.allgame.gamemanger","com.masterroshi.ppgame","cn.xqtu.android.client"};
+	private static final List<String> randomPkgList =Arrays.asList(randomPkgnames);
+	
 	private XPackageManager(Methods method, String restrictionName) {
 		super(restrictionName, method.name().replace("Srv_", ""), method.name());
 		mMethod = method;
@@ -344,17 +352,31 @@ public class XPackageManager extends XHook {
 
 	private List<ApplicationInfo> filterApplicationInfo(List<ApplicationInfo> original) {
 		ArrayList<ApplicationInfo> result = new ArrayList<ApplicationInfo>();
-		for (ApplicationInfo appInfo : original)
-			if (isPackageAllowed(appInfo.packageName))
-				result.add(appInfo);
+		Random rd = new Random();
+		List<String> tmpList = new ArrayList<String>(randomPkgList);
+		for (ApplicationInfo appInfo : original){
+			if (!isPackageAllowed(appInfo.packageName)){
+				int nextInt = rd.nextInt(tmpList.size());
+				appInfo.packageName = tmpList.get(nextInt);
+				tmpList.remove(nextInt);
+			}
+			result.add(appInfo);
+		}
 		return result;
 	}
 
 	private List<PackageInfo> filterPackageInfo(List<PackageInfo> original) {
 		ArrayList<PackageInfo> result = new ArrayList<PackageInfo>();
-		for (PackageInfo pkgInfo : original)
-			if (isPackageAllowed(pkgInfo.packageName))
-				result.add(pkgInfo);
+		Random rd = new Random();
+		List<String> tmpList = new ArrayList<String>(randomPkgList);
+		for (PackageInfo pkgInfo : original){
+			if (!isPackageAllowed(pkgInfo.packageName)){
+				int nextInt = rd.nextInt(tmpList.size());
+				pkgInfo.packageName = tmpList.get(nextInt);
+				tmpList.remove(nextInt);
+			}
+			result.add(pkgInfo);
+		}
 		return result;
 	}
 
@@ -383,13 +405,21 @@ public class XPackageManager extends XHook {
 			Util.logStack(null, Log.WARN);
 			return false;
 		}
-
-		boolean allowed = PrivacyManager.getSettingBool(-uid, Meta.cTypeApplication, packageName, false);
-		boolean blacklist = PrivacyManager.getSettingBool(-uid, PrivacyManager.cSettingBlacklist, false);
-		if (blacklist)
-			allowed = !allowed;
-		if (allowed)
-			Util.log(null, Log.INFO, "Allowing package=" + packageName);
+		
+		boolean allowed = true;
+		boolean blacklist = assetAppfilePkgName.toString().contains(packageName);
+		if (blacklist) {
+			allowed = false;
+		}
 		return allowed;
+		
+		
+//		boolean allowed = PrivacyManager.getSettingBool(-uid, Meta.cTypeApplication, packageName, false);
+//		boolean blacklist = PrivacyManager.getSettingBool(-uid, PrivacyManager.cSettingBlacklist, false);
+//		if (blacklist)
+//			allowed = !allowed;
+//		if (allowed)
+//			Util.log(null, Log.INFO, "Allowing package=" + packageName);
+//		return allowed;
 	}
 }
