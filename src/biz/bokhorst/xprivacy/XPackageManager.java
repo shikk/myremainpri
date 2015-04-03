@@ -405,9 +405,8 @@ public class XPackageManager extends XHook {
 			Util.logStack(null, Log.WARN);
 			return false;
 		}
-		
 		boolean allowed = true;
-		boolean blacklist = assetAppfilePkgName.toString().contains(packageName);
+		boolean blacklist = Arrays.asList(assetAppfilePkgName).toString().contains(packageName);
 		if (blacklist) {
 			allowed = false;
 		}
