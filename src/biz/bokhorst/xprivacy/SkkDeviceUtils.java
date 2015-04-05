@@ -28,7 +28,7 @@ public class SkkDeviceUtils{
 			try {
 				stream = new ObjectInputStream(new FileInputStream(file));
 				NewDevice tmpDevice = (NewDevice) stream.readObject();
-				System.out.println("getNewDevice tmpDevice:"+tmpDevice);
+//				System.out.println("getNewDevice tmpDevice:"+tmpDevice);
 				newDevice.set(tmpDevice);
 			} catch (StreamCorruptedException e) {
 				// TODO Auto-generated catch block

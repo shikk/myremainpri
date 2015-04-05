@@ -1,11 +1,17 @@
 package biz.bokhorst.xprivacy;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 
+import android.net.wifi.SupplicantState;
+import android.net.wifi.WifiInfo;
+import android.os.Binder;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
 
@@ -36,7 +42,7 @@ public class XWindowManager extends XHook {
 	// @formatter:on
 
 	private enum Methods {
-		addView, removeView, updateViewLayout
+		addView, removeView, updateViewLayout,getDefaultDisplay
 	};
 
 	public static List<XHook> getInstances(String className) {
@@ -48,6 +54,7 @@ public class XWindowManager extends XHook {
 			listHook.add(new XWindowManager(Methods.addView, PrivacyManager.cOverlay, className));
 			listHook.add(new XWindowManager(Methods.removeView, null, className));
 			listHook.add(new XWindowManager(Methods.updateViewLayout, null, className));
+			listHook.add(new XWindowManager(Methods.getDefaultDisplay, null, className));
 		}
 		return listHook;
 	}
@@ -87,5 +94,43 @@ public class XWindowManager extends XHook {
 	@Override
 	protected void after(XParam param) throws Throwable {
 		// Do nothing
+//		if (mMethod == Methods.getDefaultDisplay){
+//			int uid = Binder.getCallingUid();
+//			if (param != null&&getRestricted(uid, PrivacyManager.cPhone, "Configuration.MCC")) {
+//				SkkDeviceUtils.getNewDevice();
+//				int widthPixels = SkkDeviceUtils.newDevice.width;
+//				int heightPixels = SkkDeviceUtils.newDevice.height;
+//				System.out.println("xxxxxxxxxxxxxxxxxxx  getDefaultDisplay 111"+widthPixels+"   "+heightPixels);
+//				Display display =  (Display) param.getResult();
+//				Field fieldInfo = Display.class.getDeclaredField("mDisplayInfo");
+//				fieldInfo.setAccessible(true);
+//				System.out.println("xxxxxxxxxxxxxxxxxxx  getDefaultDisplay 222"+widthPixels+"   "+heightPixels);
+//
+//				Object fieldInfoObj = fieldInfo.get(display);
+//				System.out.println("xxxxxxxxxxxxxxxxx  getDefaultDisplay 333   "+fieldInfoObj);
+//				Class<?> DisplayInfoClass = Class.forName("android.view.DisplayInfo"); 
+//				Object newInstance = DisplayInfoClass.getDeclaredConstructor(DisplayInfoClass).newInstance(fieldInfoObj);
+//				Field fieldAppWidth = DisplayInfoClass.getDeclaredField("appWidth");
+//				Field fieldAppHeight = DisplayInfoClass.getDeclaredField("appHeight");
+//				Field fieldLargestNominalAppWidth = DisplayInfoClass.getDeclaredField("largestNominalAppWidth");
+//				Field fieldLargestNominalAppHeight = DisplayInfoClass.getDeclaredField("largestNominalAppHeight");
+//				Field fieldLogicalWidth = DisplayInfoClass.getDeclaredField("logicalWidth");
+//				Field fieldLogicalHeight = DisplayInfoClass.getDeclaredField("logicalHeight");
+//				fieldAppWidth.set(newInstance, widthPixels);
+//				fieldAppHeight.set(newInstance, heightPixels);
+//				fieldLargestNominalAppHeight.set(newInstance, heightPixels);
+//				fieldLargestNominalAppWidth.set(newInstance, widthPixels);
+//				fieldLogicalHeight.set(newInstance, heightPixels);
+//				fieldLogicalWidth.set(newInstance, widthPixels);
+//				
+//				fieldInfo.set(display, newInstance);				
+//				DisplayMetrics outMetrics = new DisplayMetrics();
+//				
+// 				
+//				display.getMetrics(outMetrics );
+//				param.setResult(display);
+//			}	
+//		}
+		
 	}
 }
