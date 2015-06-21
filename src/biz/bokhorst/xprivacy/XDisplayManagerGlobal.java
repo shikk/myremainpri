@@ -67,7 +67,7 @@ public class XDisplayManagerGlobal extends XHook {
 //			System.out.println("xxxxxxxxxxxxxxxxxxx  getDefaultDisplay ");
 			int uid = Binder.getCallingUid();
 			if (param != null&&getRestricted(uid, PrivacyManager.cPhone, "Configuration.MCC")) {
-				System.out.println("cccccccccccccccc  xxxx  meinia getDisplayInfo");
+//				System.out.println("cccccccccccccccc  xxxx  meinia getDisplayInfo");
 				SkkDeviceUtils.getNewDevice();
 				int widthPixels = SkkDeviceUtils.newDevice.width;
 				int heightPixels = SkkDeviceUtils.newDevice.height;

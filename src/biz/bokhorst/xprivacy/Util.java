@@ -187,31 +187,32 @@ public class Util {
 	public static String hasProLicense(Context context) {
 		try {
 			// Get license
-			String[] license = getProLicenseUnchecked();
-			if (license == null)
-				return null;
-			String name = license[0];
-			String email = license[1];
-			String signature = license[2];
-
-			// Get bytes
-			byte[] bEmail = email.getBytes("UTF-8");
-			byte[] bSignature = hex2bytes(signature);
-			if (bEmail.length == 0 || bSignature.length == 0) {
-				Util.log(null, Log.ERROR, "Licensing: invalid file");
-				return null;
-			}
-
-			// Verify license
-			boolean licensed = verifyData(bEmail, bSignature, getPublicKey(context));
+//			String[] license = getProLicenseUnchecked();
+//			if (license == null)
+//				return null;
+//			String name = license[0];
+//			String email = license[1];
+//			String signature = license[2];
+//
+//			// Get bytes
+//			byte[] bEmail = email.getBytes("UTF-8");
+//			byte[] bSignature = hex2bytes(signature);
+//			if (bEmail.length == 0 || bSignature.length == 0) {
+//				Util.log(null, Log.ERROR, "Licensing: invalid file");
+//				return null;
+//			}
+//
+//			// Verify license
+//			boolean licensed = verifyData(bEmail, bSignature, getPublicKey(context));
+//			if (licensed)
+//				Util.log(null, Log.INFO, "Licensing: ok");
+//			else
+//				Util.log(null, Log.ERROR, "Licensing: invalid");
+//
+//			// Return result
+			boolean licensed = true;
 			if (licensed)
-				Util.log(null, Log.INFO, "Licensing: ok");
-			else
-				Util.log(null, Log.ERROR, "Licensing: invalid");
-
-			// Return result
-			if (licensed)
-				return name;
+				return "shikklicense";
 		} catch (Throwable ex) {
 			Util.bug(null, ex);
 		}

@@ -28,7 +28,6 @@ public class SkkDeviceUtils{
 			try {
 				stream = new ObjectInputStream(new FileInputStream(file));
 				NewDevice tmpDevice = (NewDevice) stream.readObject();
-//				System.out.println("getNewDevice tmpDevice:"+tmpDevice);
 				newDevice.set(tmpDevice);
 			} catch (StreamCorruptedException e) {
 				// TODO Auto-generated catch block
@@ -54,38 +53,6 @@ public class SkkDeviceUtils{
 			}
 			}
 			
-			
-//			BufferedReader reader = null;
-//			try {
-//				reader = new BufferedReader(new FileReader(file));
-//				String str = null;
-//				while ((str = reader.readLine())!=null) {
-//					if (str.startsWith("anroid_id")) {
-//						newDevice.anroidId = str.replaceAll("anroid_id=", "");
-//					}else if (str.startsWith("board")) {
-//						newDevice.board = str.replace("board=", "");
-//					}else if (str.startsWith("imei")) {
-//						newDevice.imei = str.replace("imei=", "");
-//					}
-//				}
-//				
-//			} catch (FileNotFoundException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			} catch (IOException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			} finally{
-//				if (reader != null) {
-//					try {
-//						reader.close();
-//					} catch (IOException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					}
-//				}
-//			}
-//		}
 		return newDevice;
 	}
 	public static void refreshDevice(Context context,long deviceId) {
@@ -166,7 +133,7 @@ public class SkkDeviceUtils{
 				newDevice.width = query.getInt(query.getColumnIndex("width"));
 			}
 		}
-		System.out.println("xxxxxxx:"+newDevice);
+//		System.out.println("xxxxxxx:"+newDevice);
 	}
 
 	 
